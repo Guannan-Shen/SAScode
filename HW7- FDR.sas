@@ -1,3 +1,4 @@
+/** SAS university studio **/
 DATA rawp;
 	input SNP Raw_P;
 	cards;
