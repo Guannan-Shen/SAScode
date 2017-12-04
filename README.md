@@ -6,3 +6,4 @@
 
 ## Contents
 ## Scripts for ANOVA, Simple Linear Regression, multivariate linear Regression with confounding, mediation and interactions, linear regression with categorical independent variables. 
+## /** Working with SAS university studio **/
