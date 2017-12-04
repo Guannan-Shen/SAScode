@@ -1,3 +1,5 @@
+/** SAS university studio **/
+/** snippet code to import data uploaded to SAS studio web-page browser **/
 %web_drop_table(breact);
 FILENAME REFFILE 
 	'/folders/myfolders/6611 Biostats Methods/Homework/bronchial reactivity.xlsx';
