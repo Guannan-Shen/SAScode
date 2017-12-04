@@ -1,0 +1,76 @@
+** Working with SAS university studio **;
+** Codes were rearranged by built-in Format Code option **;
+FILENAME diet  
+	'/folders/myfolders/6611 Biostats Methods/Homework/carotenoids.dat'  
+	TERMSTR=CRLF; 
+ 
+DATA carotenoid; 
+	infile diet; 
+	input age sex smoke bmi vitamins calories fat fiber alcohol chol betadiet  
+		retdiet betaplas replas; 
+RUN; 
+ 
+proc summary data=carotenoid; 
+	CLASS smoke; 
+	var betaplas; 
+	output out=plasma_betacarotene n=betaplas_size mean=betaplas_mean  
+		std=betaplas_sd stderr=betaplas_stderr; 
+run; 
+ 
+PROC PRINT DATA=plasma_betacarotene; 
+RUN; 
+ 
+/* Not balanced sample size */ 
+/*Data step to create dummy variables for each level of SMOKE*/ 
+DATA beta_smoke; 
+****  Key STEP       ********    ;
+	*** Create dummy variables ****; 
+	set carotenoid; 
+ 
+	IF smoke ne . THEN 
+		DO; 
+			never=(smoke=1); 
+			former=(smoke=2); 
+			current=(smoke=3); 
+		END; 
+	** a “reference cell” linear regression model (MODEL 1)  **; 
+	** Make the never smokers as the reference group **; 
+ 
+PROC REG DATA=beta_smoke plots=NONE; 
+	title "Reference Cell Model 1"; 
+	MODEL betaplas=former current / COVB clb; 
+	** Covariance table and ; 
+	** Testing Generalized Linear Hypotheses Directly; 
+	Curr_Former: TEST current=former; 
+	RUN; 
+	** The weight of never vs former ; 
+	** Created weight **; 
+ 
+DATA weightNON; 
+	title "Cell Means Model 2"; 
+	w_never=157/(115+157); 
+	w_former=115/(115+157); 
+run; 
+ 
+PROC PRINT DATA=weightNON; 
+RUN; 
+ 
+PROC REG DATA=beta_smoke PLOTS=NONE; 
+	** Cell means model and no intercept; 
+	MODEL betaplas=never former current / NOINT clb; 
+	Overall : TEST never=former=current; 
+	Curr_Former2 : TEST current - former; 
+	Non_Curr : TEST .57721*never + .42279*former - current /; 
+	RUN; 
+	* Test the current vs former using Ttest; 
+	TITLE "Current - Former"; 
+ 
+PROC REG DATA=beta_smoke PLOTS=NONE; 
+	model betaplas=never former / clb; 
+	RUN; 
+ 
+PROC TTEST DATA=carotenoid plots=NONE; 
+	class smoke; 
+	where smoke=2 or smoke=3; 
+	var betaplas; 
+RUN; 
