@@ -68,7 +68,9 @@ PROC REG DATA=beta_smoke PLOTS=NONE;
 PROC REG DATA=beta_smoke PLOTS=NONE; 
 	model betaplas=never former / clb; 
 	RUN; 
- 
+** The TTEST here it to prove the pooled variance method using by previous F test **;
+** The F test using the all 3 groups to calculate the pooled variance **;
+** Thus the p value here differs **;
 PROC TTEST DATA=carotenoid plots=NONE; 
 	class smoke; 
 	where smoke=2 or smoke=3; 
