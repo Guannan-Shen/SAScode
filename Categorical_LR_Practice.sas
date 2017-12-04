@@ -5,6 +5,7 @@ Data elemapi;
 	set hw6611.elemapi2_2;
 	* data being used in data step;
 run;
+/** dataset proc with contents statemment **/
 
 proc datasets nolist;
   contents data= elemapi out=elemdesc noprint;
