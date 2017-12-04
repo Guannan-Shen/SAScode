@@ -1,3 +1,5 @@
+/** SAS university studio **/
+/** Simple linear regression with proc sgplot **/
 DATA hw1;
 	INPUT id gender chol wtkg age;
 	chol2=chol*chol;
